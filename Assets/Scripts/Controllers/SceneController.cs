@@ -10,7 +10,8 @@ namespace Core
         [SerializeField] private List<string> _scenes;
         [SerializeField] private bool LevelDebug = false;
         [SerializeField] private LevelController _currentLevelController;
-
+        
+        
         private void Start()
         {
             UIEvents.Current.OnButtonNextLevel += LoadNextScene;

@@ -1,7 +1,9 @@
 {
     "name": "2048Ball.Core",
     "rootNamespace": "Core",
-    "references": [],
+    "references": [
+        "GUID:2fdef4a859838e3449b625605ab13c25"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
