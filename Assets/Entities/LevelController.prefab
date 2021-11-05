@@ -43,3 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34c48648cf7c4563923c157dce254893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _levelSpline: {fileID: 0}
+  _starterNode: {fileID: 0}
+  _ballSnakeList: []
+  _lineState: 0
+  _ballExample: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
+  _starterBalls: 
+  _deployTime: 0
