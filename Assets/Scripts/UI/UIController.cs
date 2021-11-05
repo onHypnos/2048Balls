@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core;
 using UnityEngine;
 
 public class UIController : MonoBehaviour
@@ -13,7 +14,8 @@ public class UIController : MonoBehaviour
         UIEvents.Current.OnButtonResumeGame += StartGame;
         UIEvents.Current.OnButtonNextLevel += NextLevel;
         UIEvents.Current.OnButtonRestartGame += RestartGame;
-
+        GameEvents.Current.OnLevelVictory += WinGame;
+        GameEvents.Current.OnLevelFailed += LoseGame;
     }
 
     private void Start()
@@ -48,12 +50,12 @@ public class UIController : MonoBehaviour
 
     private void NextLevel()
     {
-        //TODO
+        //TODO InGameMenu
     }
 
     private void RestartGame()
     {
-        //TODO
+        //TODO SameThatNextLevel
     }
 
     public void AddView(BaseMenuView view)

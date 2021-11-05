@@ -345,7 +345,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de41289ad89b41a4abc31fb545363e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scenes: []
+  _scenes:
+  - Level1
+  LevelDebug: 1
+  _currentLevelController: {fileID: 0}
 --- !u!4 &733355313
 Transform:
   m_ObjectHideFlags: 0
