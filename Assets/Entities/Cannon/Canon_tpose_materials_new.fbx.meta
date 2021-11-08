@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: bb21d9a2b2fc5dd42b9eab1be2356911
+guid: e699c3931b652b34f9a1ca3fe63e59b7
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
-      74: 5403060068925560607
-    second: Canon_fire_materials
+      74: -977067766860330374
+    second: Canon_tpose_materials_new
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -37,7 +37,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 15
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -88,16 +88,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.14999999
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: d88f3a75bfefbee4bb1ea6c0fbc7f65a, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 

@@ -32,30 +32,32 @@ public class UIController : MonoBehaviour
 
     private void PauseGame()
     {
-        Time.timeScale = 0.0f;
+        Time.timeScale = 0.01f;
         SwitchUI(UIState.Pause);
     }
 
     private void WinGame()
     {
-        Time.timeScale = 0.0f;
+        Time.timeScale = 0.01f;
         SwitchUI(UIState.WinMenu);
     }
 
     private void LoseGame()
     {
-        Time.timeScale = 0.0f;
+        Time.timeScale = 0.01f;
         SwitchUI(UIState.LoseMenu);
     }
 
     private void NextLevel()
     {
         //TODO InGameMenu
+        SwitchUI(UIState.MainMenu);
     }
 
     private void RestartGame()
     {
         //TODO SameThatNextLevel
+        SwitchUI(UIState.MainMenu);
     }
 
     public void AddView(BaseMenuView view)

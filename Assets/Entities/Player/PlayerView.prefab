@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1081057793129361528
+--- !u!1 &7208961100566729712
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1081057793129361530}
-  - component: {fileID: 1081057793129361531}
+  - component: {fileID: 3240613342180973641}
+  - component: {fileID: 1423709394401624580}
   m_Layer: 0
-  m_Name: LevelController
+  m_Name: PlayerView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1081057793129361530
+--- !u!4 &3240613342180973641
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081057793129361528}
+  m_GameObject: {fileID: 7208961100566729712}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9509562, y: -2.3413982, z: 4.7233896}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1081057793129361531
+--- !u!114 &1423709394401624580
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081057793129361528}
+  m_GameObject: {fileID: 7208961100566729712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34c48648cf7c4563923c157dce254893, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b9f694398c640d19551ddbbd11ea0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelSpline: {fileID: 0}
-  _starterNode: {fileID: 0}
-  _ballSnakeList: []
-  _lineState: 0
-  _currentPlayer: {fileID: 0}
-  _ballExample: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
-  _playerPrefab: {fileID: 7208961100566729712, guid: 84c931f6d1ca47d4491a74b8dc5c9a1a, type: 3}
-  _starterBalls: 
-  _deployTime: 0
+  _playerCannon: []
+  _state: 0

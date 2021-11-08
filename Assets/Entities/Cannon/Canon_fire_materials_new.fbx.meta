@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: f223ad2add7de66459226d8fabfbbd94
+guid: d88f3a75bfefbee4bb1ea6c0fbc7f65a
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
-      74: -7914173859846950011
-    second: Canon_tpose
+      74: -2749376123554360600
+    second: Canon_fire_materials_new
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -26,7 +26,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -97,7 +97,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
