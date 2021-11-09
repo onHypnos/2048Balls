@@ -15,14 +15,17 @@ namespace Core
         [SerializeField] private GameObject _textSphere;
         [SerializeField] private List<TextMeshProUGUI> _textComponents;
         private Rigidbody _rigidbody;
-        
-        
+        private Vector3 temp;
+
+        private float _clampingVelocityWindow;
+        [Header("ClampingWindow")][Tooltip("Time when clamping not affect on rigidbody")][SerializeField][Range(0.5f,5f)]private float _clampingWindowDuration;
+
         public int BallPower => _ballPower;
-        
-        
+
+
         public Rigidbody RigidBody => _rigidbody;
-        
-        
+
+
         private void OnCollisionEnter(Collision other)
         {
             if (gameObject.layer == 6) //layer6 = ball
@@ -39,12 +42,11 @@ namespace Core
                     if (other.gameObject.CompareTag(tag))
                     {
                         CollapseBalls(other.gameObject.GetComponent<BallView>());
-
                     }
                 }
             }
         }
-        
+
         private void OnCollisionStay(Collision other)
         {
             if (gameObject.layer == 6) //layer6 = ball
@@ -52,6 +54,11 @@ namespace Core
                 if (other.gameObject.layer == 7)
                 {
                     LevelController.Current.SetBallOnSpline(this);
+
+
+                    temp = _splineUser.result.forward * -1;
+                    _rigidbody.AddForce(temp);
+                    other.gameObject.GetComponent<Rigidbody>().AddForce(temp);
                 }
             }
             else if (gameObject.layer == 7)
@@ -61,7 +68,9 @@ namespace Core
                     if (other.gameObject.CompareTag(tag))
                     {
                         CollapseBalls(other.gameObject.GetComponent<BallView>());
-
+                        OpenClampingWindow();
+                        temp = _splineUser.result.forward * -1;
+                        _rigidbody.AddForce(temp * (_ballPower * 3 + 10));
                     }
                 }
             }
@@ -71,7 +80,8 @@ namespace Core
         {
             if (this.gameObject.activeSelf)
             {
-                LevelController.Current.ReturnBallInPool(view);
+                
+                LevelController.Current.BallCollapsed(view);
                 ChangeBallPower(_ballPower + 1);
             }
         }
@@ -96,23 +106,39 @@ namespace Core
             transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.6f);
             //var magnitude = _rigidbody.velocity.magnitude;
             //_rigidbody.velocity = _splineUser.result.forward * magnitude*0.95f;
-            _rigidbody.velocity = Vector3.ClampMagnitude(Vector3.Project(_rigidbody.velocity, _splineUser.result.forward), clampValue);
+            if (_clampingVelocityWindow == 0)
+            {
+                _rigidbody.velocity =
+                    Vector3.ClampMagnitude(Vector3.Project(_rigidbody.velocity, _splineUser.result.forward),
+                        clampValue);
+            }
+            else if(_clampingVelocityWindow > 0)
+            {
+                _clampingVelocityWindow -= Time.deltaTime;
+            }else if (_clampingVelocityWindow < 0)
+            {
+                _clampingVelocityWindow = 0;
+            }
         }
 
+        private void OpenClampingWindow()
+        {
+            _clampingVelocityWindow = _clampingWindowDuration;
+        }
 
         public void ChangeBallPower(int power)
         {
             if (power < 12)
             {
-                    _renderer.sharedMaterial = _colorMaterials[power];
-                    for (int i = 0; i < _textComponents.Count; i++)
-                    {
-                        _textComponents[i].text = $"{Math.Pow(2, power)}";
-                    }
+                _renderer.sharedMaterial = _colorMaterials[power];
+                for (int i = 0; i < _textComponents.Count; i++)
+                {
+                    _textComponents[i].text = $"{Math.Pow(2, power)}";
+                }
 
-                    gameObject.tag = power.ToString();
+                gameObject.tag = power.ToString();
             }
-            
+
             _ballPower = power;
         }
 
@@ -126,7 +152,6 @@ namespace Core
         {
             gameObject.layer = 7;
             _splineUser.spline = spline;
-
         }
     }
 }

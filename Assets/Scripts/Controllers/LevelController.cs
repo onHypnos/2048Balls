@@ -197,6 +197,11 @@ namespace Core
             _ballPool.Enqueue(view);
         }
 
+        public void BallCollapsed(BallView view)
+        {
+            ReturnBallInPool(view);
+        }
+
         private void SetBallOnSpline(BallView ball, SplineComputer spline)
         {
             ball.SetSpline(spline);

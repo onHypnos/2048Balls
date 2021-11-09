@@ -303,6 +303,7 @@ MonoBehaviour:
   _textComponents:
   - {fileID: 274424833325446811}
   - {fileID: 6080402061378594100}
+  _clampingWindowDuration: 1
 --- !u!33 &2639536924154841972
 MeshFilter:
   m_ObjectHideFlags: 0
