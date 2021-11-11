@@ -11,7 +11,7 @@ namespace Core
         [SerializeField] private List<string> _scenes;
         [SerializeField] private bool LevelDebug = false;
         [SerializeField] private LevelController _currentLevelController;
-
+        private string _currentSceneName;
         private void Awake()
         {
             UIEvents.Current.OnButtonNextLevel += LoadNextScene;
@@ -38,7 +38,7 @@ namespace Core
             }
 
             var currentLevelNumber = PlayerPrefs.GetInt("PlayerLevel");
-            SceneManager.UnloadSceneAsync(_scenes[currentLevelNumber]);
+            SceneManager.UnloadSceneAsync(_currentSceneName);
             if (currentLevelNumber + 1 >= _scenes.Count)
             {
                 currentLevelNumber = -1;
@@ -57,12 +57,13 @@ namespace Core
             }
 
             var currentLevelNumber = PlayerPrefs.GetInt("PlayerLevel");
-            SceneManager.UnloadSceneAsync(currentLevelNumber);
+            SceneManager.UnloadSceneAsync(_currentSceneName);
             LoadLevelScene(_scenes[currentLevelNumber]);
         }
 
         public void LoadLevelScene(string sceneName)
         {
+            _currentSceneName = sceneName;
             SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         }
 

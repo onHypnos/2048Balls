@@ -19,25 +19,28 @@ namespace Core
         [SerializeField] private Queue<BallView> _ballPool = new Queue<BallView>();
         [SerializeField] private LineState _lineState;
         [SerializeField] private PlayerView _currentPlayer;
-        [Header("Example")]
-        [SerializeField] private GameObject _ballExample;
+        [Header("Example")] [SerializeField] private GameObject _ballExample;
 
         [SerializeField] private GameObject _playerPrefab;
+
         [Header("Properties")] [SerializeField]
         private List<int> _starterBalls;
-        [SerializeField][Range(0.1f, 3f)] private float _ballsClampValue;
+
+        [SerializeField] [Range(0.1f, 3f)] private float _ballsClampValue;
 
 
         private int _iterator;
         private double tempDistance;
-        private BallView _lastCalledBall;
-
+        private BallView _lastBallOnSpline;
+        private float _regroupWindow = 0;
+        [SerializeField] [Range(0.1f, 1f)] private float _baseRegroupWindowDuration;
         [SerializeField] [Range(0.1f, 2f)] private float _deployTime;
+        [SerializeField] [Range(0.01f, 2f)]private float _pushPowerModifier;
 
         private void Awake()
         {
             Current = this;
-            
+
             FindObjectOfType<SceneController>().InitializeLevelController(this);
             if (_levelSpline == null)
             {
@@ -64,8 +67,6 @@ namespace Core
                 }
                 else
                 {
-                    
-                    
                 }
             }
             else
@@ -86,6 +87,7 @@ namespace Core
             {
                 tempGO = Instantiate(example, poolPosition, Quaternion.identity, this.transform);
                 tempGO.SetActive(false);
+                tempGO.name = $"Ball {i}";
                 queue.Enqueue(tempGO.GetComponent<T>());
             }
         }
@@ -102,13 +104,12 @@ namespace Core
                     _tempBall = _ballSnakeList[_iterator];
                 }
             }
-            _lastCalledBall = _tempBall;
+
+            _lastBallOnSpline = _tempBall;
         }
 
         private void LateUpdate()
         {
-            
-            
             switch (_lineState)
             {
                 case LineState.Await:
@@ -117,6 +118,7 @@ namespace Core
                     {
                         _ballSnakeList[_iterator].Execute(_ballsClampValue);
                     }
+
                     break;
                 }
                 case LineState.Moving:
@@ -129,10 +131,50 @@ namespace Core
                 }
                 case LineState.Regroup:
                 {
+                    for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
+                    {
+                        _ballSnakeList[_iterator].Execute(_ballsClampValue);
+                    }
+                    if (_regroupWindow > 0)
+                    {
+                        _regroupWindow -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        _regroupWindow = 0;
+                        SetLineState(LineState.Moving);
+                    }
+
                     break;
                 }
                 default: break;
             }
+        }
+
+        private void SetLineState(LineState state)
+        {
+            switch (state)
+            {
+                case LineState.Await:
+                {
+                    break;
+                }
+                case LineState.Moving:
+                {
+                    break;
+                }
+                case LineState.Regroup:
+                {
+                    _regroupWindow = _baseRegroupWindowDuration;
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+
+            _lineState = state;
         }
 
         private void FixedUpdate()
@@ -146,7 +188,7 @@ namespace Core
                 }
                 case LineState.Moving:
                 {
-                    _lastCalledBall.PushForward(_ballSnakeList.Count);
+                    _lastBallOnSpline.PushForward(_ballSnakeList.Count * _pushPowerModifier);
                     break;
                 }
                 case LineState.Regroup:
@@ -156,7 +198,7 @@ namespace Core
                 default: break;
             }
         }
-        
+
         public IEnumerator DeployStarterBalls(int ballAmount, List<int> ballsPower)
         {
             var timeDelay = _deployTime / ballAmount;
@@ -168,9 +210,10 @@ namespace Core
                 SetBallOnSpline(_tempBall, _levelSpline);
                 _tempBall.transform.position = _starterNode.position;
                 _tempBall.gameObject.SetActive(true);
-                
+
                 yield return new WaitForSeconds(timeDelay);
             }
+
             FindBackBall();
             _lineState = LineState.Moving;
         }
@@ -182,8 +225,10 @@ namespace Core
                 Debug.LogWarning("Pool is null"); //TODO разобраться с порядком вызова
                 InitializePool<BallView>(_ballPool, _ballExample, 50, _starterNode.position + Vector3.right);
             }
+
             _tempBall = _ballPool.Dequeue();
             _tempBall.ChangeBallPower(ballPower);
+            _tempBall.gameObject.layer = 6;
             return _tempBall;
         }
 
@@ -193,14 +238,28 @@ namespace Core
             {
                 _ballSnakeList.Remove(view);
             }
+
             view.gameObject.SetActive(false);
+            view.RigidBody.velocity = Vector3.zero;
+            view.gameObject.layer = 6;
+            view.SetSpline(null);
             _ballPool.Enqueue(view);
         }
 
         public void BallCollapsed(BallView view)
         {
             ReturnBallInPool(view);
+            for (int i = 0; i < _ballSnakeList.Count; i++)
+            {
+                if (_ballSnakeList[i] != _lastBallOnSpline)
+                {
+                    _ballSnakeList[i].PushBack(_ballSnakeList.Count);
+                }
+
+                SetLineState(LineState.Regroup);
+            }
         }
+
 
         private void SetBallOnSpline(BallView ball, SplineComputer spline)
         {

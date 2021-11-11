@@ -95,6 +95,11 @@ namespace Core
         {
             _rigidbody.velocity = _splineUser.result.forward * ballCount;
         }
+        
+        public void PushBack(float ballCount)
+        {
+            _rigidbody.velocity = _splineUser.result.forward * -ballCount;
+        }
 
         public double GetSplineProgressPercent()
         {
@@ -121,7 +126,7 @@ namespace Core
             }
         }
 
-        private void OpenClampingWindow()
+        public void OpenClampingWindow()
         {
             _clampingVelocityWindow = _clampingWindowDuration;
         }

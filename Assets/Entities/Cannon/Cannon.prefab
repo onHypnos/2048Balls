@@ -376,6 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerControlled: 1
+  _aimSphereExample: {fileID: 2508795426742948853, guid: f35689142af4ba543b3fa7210cae157b, type: 3}
 --- !u!1 &7206388316390864108
 GameObject:
   m_ObjectHideFlags: 0
