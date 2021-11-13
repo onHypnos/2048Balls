@@ -13,8 +13,8 @@ namespace Core
         public static LevelController Current;
         private BallView _tempBall;
 
-        [SerializeField] private SplineComputer _levelSpline;  //Расширить до levelSplines
-        [SerializeField] private Transform _starterNode;  //Расширить до StarterNodes
+        [SerializeField] private SplineComputer _levelSpline; //Расширить до levelSplines
+        [SerializeField] private Transform _starterNode; //Расширить до StarterNodes
         [SerializeField] private List<BallView> _ballSnakeList; //Расширить до List<List<BallView>>
         [SerializeField] private Queue<BallView> _ballPool = new Queue<BallView>();
         [SerializeField] private LineState _lineState; //LinesState
@@ -30,12 +30,14 @@ namespace Core
 
 
         private int _iterator;
-        private double tempDistance;
+        private double _tempDistance;
         private BallView _lastBallOnSpline;
         private float _regroupWindow = 0;
         [SerializeField] [Range(0.1f, 1f)] private float _baseRegroupWindowDuration;
         [SerializeField] [Range(0.1f, 2f)] private float _deployTime;
-        [SerializeField] [Range(0.01f, 2f)]private float _pushPowerModifier;
+        [SerializeField] [Range(0.01f, 2f)] private float _pushPowerModifier;
+        [SerializeField] private int _scoreCurrent;
+        [SerializeField] private int _scoreMax;
 
         private void Awake()
         {
@@ -95,12 +97,12 @@ namespace Core
         public void FindBackBall()
         {
             _tempBall = null;
-            tempDistance = 1;
+            _tempDistance = 1;
             for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
             {
-                if (_ballSnakeList[_iterator].GetSplineProgressPercent() < tempDistance)
+                if (_ballSnakeList[_iterator].GetSplineProgressPercent() < _tempDistance)
                 {
-                    tempDistance = _ballSnakeList[_iterator].GetSplineProgressPercent();
+                    _tempDistance = _ballSnakeList[_iterator].GetSplineProgressPercent();
                     _tempBall = _ballSnakeList[_iterator];
                 }
             }
@@ -127,6 +129,7 @@ namespace Core
                     {
                         _ballSnakeList[_iterator].Execute(_ballsClampValue);
                     }
+
                     break;
                 }
                 case LineState.Regroup:
@@ -135,6 +138,7 @@ namespace Core
                     {
                         _ballSnakeList[_iterator].Execute(_ballsClampValue);
                     }
+
                     if (_regroupWindow > 0)
                     {
                         _regroupWindow -= Time.deltaTime;
@@ -202,19 +206,22 @@ namespace Core
         public IEnumerator DeployStarterBalls(int ballAmount, List<int> ballsPower)
         {
             var timeDelay = _deployTime / ballAmount;
-            for (_iterator = 0; _iterator < ballAmount; _iterator++)
+            int iiii = 0;
+            for (int i = 0; i < ballAmount; i++)
             {
-                _tempBall = GetBallFromPool(ballsPower[_iterator]);
+                iiii++;
+                _tempBall = GetBallFromPool(ballsPower[i]);
                 //_TempBall going to line
                 //_tempBall.SetSpline(_levelSpline);
                 SetBallOnSpline(_tempBall, _levelSpline);
                 _tempBall.transform.position = _starterNode.position;
                 _tempBall.gameObject.SetActive(true);
-
+                UpdateScore(CountScore(), _scoreMax);
+                FindBackBall();
                 yield return new WaitForSeconds(timeDelay);
             }
-
-            FindBackBall();
+            Debug.Log($"Охуел?{iiii}, BIGBALLSAMOUNT{ballAmount}");
+            
             _lineState = LineState.Moving;
         }
 
@@ -255,9 +262,15 @@ namespace Core
                 {
                     _ballSnakeList[i].PushBack(_ballSnakeList.Count, pow);
                 }
-
+                else
+                {
+                    _ballSnakeList[i].PushBack(_ballSnakeList.Count, 1);
+                }
+                
                 SetLineState(LineState.Regroup);
             }
+
+            UpdateScore(CountScore(), _scoreMax);
         }
 
 
@@ -267,6 +280,7 @@ namespace Core
             if (!_ballSnakeList.Contains(ball))
             {
                 _ballSnakeList.Add(ball);
+                UpdateScore(CountScore(), _scoreMax);
             }
         }
 
@@ -278,10 +292,12 @@ namespace Core
 
         public void LevelStart()
         {
+            UpdateScore(0, _scoreMax);
             StartCoroutine(DeployStarterBalls(_starterBalls.Count, _starterBalls));
             _currentPlayer.SetLevelController(this);
             Debug.Log("Start level");
             GameEvents.Current.LevelStart();
+            
             _currentPlayer.SetState(PlayerState.CanAttack);
         }
 
@@ -300,6 +316,26 @@ namespace Core
         private void LevelEnd()
         {
             GameEvents.Current.LevelEnd();
+        }
+
+        
+        private int _tempScore;
+        private int CountScore()
+        {
+            _tempScore = 0;
+            for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
+            {
+                //_tempScore += (int)Math.Pow(2, _ballSnakeList[_iterator].BallPower) * _ballSnakeList[_iterator].BallPower;
+                _tempScore += (int)Math.Pow(2, _ballSnakeList[_iterator].BallPower);
+            }
+
+            return _tempScore;
+        }
+
+        private void UpdateScore(int currentScore, int scoreMax)
+        {
+            _scoreCurrent = currentScore;
+            GameEvents.Current.ScoreUpdate(_scoreCurrent, scoreMax);
         }
     }
 

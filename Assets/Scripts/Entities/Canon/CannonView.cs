@@ -55,6 +55,14 @@ namespace Core
                             transform.position + Vector3.up * 0.5f + transform.forward * hitInfo.distance, (1f* i )/ (_aimSpheres.Count-1));
                     }
                 }
+                else
+                {
+                    for (int i = 0; i < _aimSpheres.Count; i++)
+                    {
+                        _aimSpheres[i].transform.position = Vector3.Lerp(transform.position + Vector3.up * 0.5f,
+                            transform.position + Vector3.up * 0.5f + transform.forward * 10f, (1f* i )/ (_aimSpheres.Count-1));
+                    }
+                }
             }
         }
 

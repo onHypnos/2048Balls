@@ -17,6 +17,7 @@ public class UIController : MonoBehaviour
         UIEvents.Current.OnButtonRestartGame += RestartGame;
         GameEvents.Current.OnLevelVictory += WinGame;
         GameEvents.Current.OnLevelFailed += LoseGame;
+        GameEvents.Current.OnScoreUpdate += UpdateInGameSlider;
     }
 
     private void Start()

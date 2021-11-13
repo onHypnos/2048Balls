@@ -80,9 +80,8 @@ namespace Core
         {
             if (this.gameObject.activeSelf)
             {
-                
-                LevelController.Current.BallCollapsed(view, _ballPower + 1);
                 ChangeBallPower(_ballPower + 1);
+                LevelController.Current.BallCollapsed(view, _ballPower + 1);
             }
         }
 
@@ -93,7 +92,16 @@ namespace Core
 
         public void PushForward(float ballCount)
         {
-            _rigidbody.velocity = _splineUser.result.forward * ballCount;
+            if (ballCount < 3)
+            {
+                _rigidbody.velocity = _splineUser.result.forward * 2;
+            }
+            else
+            {
+                _rigidbody.velocity = _splineUser.result.forward * ballCount;
+            }
+
+           
         }
         
         public void PushBack(float ballCount, int pow)
@@ -120,7 +128,8 @@ namespace Core
             else if(_clampingVelocityWindow > 0)
             {
                 _clampingVelocityWindow -= Time.deltaTime;
-            }else if (_clampingVelocityWindow < 0)
+            }
+            else if (_clampingVelocityWindow < 0)
             {
                 _clampingVelocityWindow = 0;
             }
