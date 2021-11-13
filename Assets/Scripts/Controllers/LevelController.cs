@@ -13,11 +13,11 @@ namespace Core
         public static LevelController Current;
         private BallView _tempBall;
 
-        [SerializeField] private SplineComputer _levelSpline;
-        [SerializeField] private Transform _starterNode;
-        [SerializeField] private List<BallView> _ballSnakeList;
+        [SerializeField] private SplineComputer _levelSpline;  //Расширить до levelSplines
+        [SerializeField] private Transform _starterNode;  //Расширить до StarterNodes
+        [SerializeField] private List<BallView> _ballSnakeList; //Расширить до List<List<BallView>>
         [SerializeField] private Queue<BallView> _ballPool = new Queue<BallView>();
-        [SerializeField] private LineState _lineState;
+        [SerializeField] private LineState _lineState; //LinesState
         [SerializeField] private PlayerView _currentPlayer;
         [Header("Example")] [SerializeField] private GameObject _ballExample;
 
@@ -246,14 +246,14 @@ namespace Core
             _ballPool.Enqueue(view);
         }
 
-        public void BallCollapsed(BallView view)
+        public void BallCollapsed(BallView view, int pow)
         {
             ReturnBallInPool(view);
             for (int i = 0; i < _ballSnakeList.Count; i++)
             {
                 if (_ballSnakeList[i] != _lastBallOnSpline)
                 {
-                    _ballSnakeList[i].PushBack(_ballSnakeList.Count);
+                    _ballSnakeList[i].PushBack(_ballSnakeList.Count, pow);
                 }
 
                 SetLineState(LineState.Regroup);
