@@ -28,17 +28,17 @@ namespace Core
 
         private void OnCollisionEnter(Collision other)
         {
-            if (gameObject.layer == 6) //layer6 = ball
+            if (gameObject.layer.Equals(6)) //layer6 = ball
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     LevelController.Current.SetBallOnSpline(this);
                 }
             }
             else 
-            if (gameObject.layer == 7)
+            if (gameObject.layer.Equals(7))
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     if (other.gameObject.CompareTag(tag))
                     {
@@ -55,9 +55,9 @@ namespace Core
 
         private void OnCollisionStay(Collision other)
         {
-            if (gameObject.layer == 6) //layer6 = ball
+            if (gameObject.layer.Equals(6)) //layer6 = ball
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     LevelController.Current.SetBallOnSpline(this);
 
@@ -68,15 +68,18 @@ namespace Core
                 }
             }
             else 
-            if (gameObject.layer == 7)
+            if (gameObject.layer.Equals(7))
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
-                    if (other.gameObject.activeSelf)
+                    if (other.gameObject.CompareTag(tag))
                     {
-                        CollapseBalls(other.gameObject.GetComponent<BallView>());
-                        OpenClampingWindow();
-                        temp = _splineUser.result.forward * -1;
+                        if (other.gameObject.activeSelf)
+                        {
+                            CollapseBalls(other.gameObject.GetComponent<BallView>());
+                            OpenClampingWindow();
+                            temp = _splineUser.result.forward * -1;
+                        }
                     }
                 }
             }
@@ -95,6 +98,7 @@ namespace Core
         public void UpdateTextSpherePosition(Transform camera)
         {
             _textSphere.transform.LookAt(camera);
+            
         }
 
         public void PushForward(float ballCount)
@@ -105,13 +109,19 @@ namespace Core
             }
             else
             {
-                _rigidbody.velocity += _splineUser.result.forward * (ballCount-1)*(ballCount-1) *  Time.deltaTime;
+                _rigidbody.velocity += _splineUser.result.forward * ballCount *  Time.deltaTime;
             }
         }
-        
+
+
+        public void StopBall()
+        {
+            _rigidbody.velocity = Vector3.zero;
+        }
+
         public void PushBack(float ballCount, float pow)
         {
-            _rigidbody.velocity += _splineUser.result.forward * -ballCount * pow;
+            _rigidbody.velocity -= _splineUser.result.forward * pow;
         }
 
         public void PushBack(float ballCount)
@@ -126,7 +136,7 @@ namespace Core
 
         public void Execute(float clampValue)
         {
-            transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.6f);
+            transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.8f);
             //var magnitude = _rigidbody.velocity.magnitude;
             //_rigidbody.velocity = _splineUser.result.forward * magnitude*0.95f;
             if (_clampingVelocityWindow == 0)
