@@ -5,6 +5,7 @@ using UnityEngine;
 public class UIController : MonoBehaviour
 {
     private List<BaseMenuView> _menues = new List<BaseMenuView>();
+    private InGameUIView _inGameUI;
 
 
     public void Awake()
@@ -23,6 +24,12 @@ public class UIController : MonoBehaviour
         SwitchUI(UIState.MainMenu);
     }
 
+
+    //TODO += to game events
+    private void UpdateInGameSlider(int currentPoints, int maxPoints)
+    {
+        _inGameUI.SetSlider(currentPoints, maxPoints);
+    }
 
     private void StartGame()
     {
@@ -63,6 +70,11 @@ public class UIController : MonoBehaviour
     public void AddView(BaseMenuView view)
     {
         _menues.Add(view);
+
+        if (view.GetType() == typeof(InGameUIView))
+        {
+            _inGameUI = view as InGameUIView;
+        }
     }
 
     #region Switch
