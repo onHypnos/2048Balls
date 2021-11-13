@@ -19,10 +19,6 @@ public class InputController : MonoBehaviour
 
     public float TemporalMagnitude => _temporalMagnitude;
 
-    public void Awake()
-    {
-    }
-
     public void Update()
     {
         if (!_isActive)

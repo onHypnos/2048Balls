@@ -70,7 +70,7 @@ namespace Core
                         CollapseBalls(other.gameObject.GetComponent<BallView>());
                         OpenClampingWindow();
                         temp = _splineUser.result.forward * -1;
-                        _rigidbody.AddForce(temp * (_ballPower * 3 + 10));
+                        //_rigidbody.AddForce(temp * (_ballPower * 3 + 10));
                     }
                 }
             }
@@ -80,9 +80,8 @@ namespace Core
         {
             if (this.gameObject.activeSelf)
             {
-                
-                LevelController.Current.BallCollapsed(view);
                 ChangeBallPower(_ballPower + 1);
+                LevelController.Current.BallCollapsed(view, _ballPower + 1);
             }
         }
 
@@ -93,12 +92,21 @@ namespace Core
 
         public void PushForward(float ballCount)
         {
-            _rigidbody.velocity = _splineUser.result.forward * ballCount;
+            if (ballCount < 3)
+            {
+                _rigidbody.velocity = _splineUser.result.forward * 2;
+            }
+            else
+            {
+                _rigidbody.velocity = _splineUser.result.forward * ballCount;
+            }
+
+           
         }
         
-        public void PushBack(float ballCount)
+        public void PushBack(float ballCount, int pow)
         {
-            _rigidbody.velocity = _splineUser.result.forward * -ballCount;
+            _rigidbody.velocity = _splineUser.result.forward * -ballCount * pow;
         }
 
         public double GetSplineProgressPercent()
@@ -120,7 +128,8 @@ namespace Core
             else if(_clampingVelocityWindow > 0)
             {
                 _clampingVelocityWindow -= Time.deltaTime;
-            }else if (_clampingVelocityWindow < 0)
+            }
+            else if (_clampingVelocityWindow < 0)
             {
                 _clampingVelocityWindow = 0;
             }

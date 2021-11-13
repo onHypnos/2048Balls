@@ -29,5 +29,11 @@ namespace Core
         {
             OnLevelEnd?.Invoke();
         }
+
+        public event Action<int,int> OnScoreUpdate;
+        public void ScoreUpdate(int current, int max)
+        {
+            OnScoreUpdate?.Invoke(current,max);
+        }
     }
 }
