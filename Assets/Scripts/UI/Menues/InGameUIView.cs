@@ -8,6 +8,13 @@ public class InGameUIView : BaseMenuView
 
     [Header("Elements")]
     [SerializeField] private Button _buttonPause;
+    [SerializeField] private Slider _slider;
+    [SerializeField] private UIStarView[] _stars;
+
+    [Header("Settings")]
+    [SerializeField] [Range(0.0f, 1.0f)] private float _star1Value;
+    [SerializeField] [Range(0.0f, 1.0f)] private float _star2Value;
+    [SerializeField] [Range(0.0f, 1.0f)] private float _star3Value;
 
     private UIController _uiController;
 
@@ -16,6 +23,17 @@ public class InGameUIView : BaseMenuView
     {
         _buttonPause.onClick.AddListener(UIEvents.Current.ButtonPauseGame);
         FindMyController();
+
+        if (_stars.Length < 3)
+        {
+            Debug.LogWarning("UI stars array is not full. They'll be not working! Huita!");
+        }
+        else
+        {
+            DeactivateStars();
+        }
+
+        _slider.value = 0.0f;
     }
 
 
@@ -37,6 +55,43 @@ public class InGameUIView : BaseMenuView
         if (IsShow) return;
         _panel.gameObject.SetActive(true);
         IsShow = true;
+    }
+
+    public void SetSlider(int currentPoints, int maxPoints)
+    {
+        float value = (float)currentPoints / maxPoints;
+
+        if (value > 1.0f)
+        {
+            value = 1.0f;
+        }
+
+        _slider.value = value;
+
+        if (value >= _star1Value)
+        {
+            ActivateStar(1);
+        }
+        if (value >= _star2Value)
+        {
+            ActivateStar(2);
+        }
+        if (value >= _star3Value)
+        {
+            ActivateStar(3);
+        }
+    }
+
+    public void ActivateStar(int starNumber)
+    {
+        _stars[starNumber - 1].Activate();
+    }
+    public void DeactivateStars()
+    {
+        for (int i = 0; i < _stars.Length; i++)
+        {
+            _stars[i].Deactivate();
+        }
     }
 
     private void OnDestroy()
