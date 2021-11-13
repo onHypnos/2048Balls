@@ -35,13 +35,19 @@ namespace Core
                     LevelController.Current.SetBallOnSpline(this);
                 }
             }
-            else if (gameObject.layer == 7)
+            else 
+            if (gameObject.layer == 7)
             {
                 if (other.gameObject.layer == 7)
                 {
                     if (other.gameObject.CompareTag(tag))
                     {
-                        CollapseBalls(other.gameObject.GetComponent<BallView>());
+                        if (other.gameObject.activeSelf)
+                        {
+                            CollapseBalls(other.gameObject.GetComponent<BallView>());
+                            OpenClampingWindow();
+                            temp = _splineUser.result.forward * -1;
+                        }
                     }
                 }
             }
@@ -61,16 +67,16 @@ namespace Core
                     other.gameObject.GetComponent<Rigidbody>().AddForce(temp);
                 }
             }
-            else if (gameObject.layer == 7)
+            else 
+            if (gameObject.layer == 7)
             {
                 if (other.gameObject.layer == 7)
                 {
-                    if (other.gameObject.CompareTag(tag))
+                    if (other.gameObject.activeSelf)
                     {
                         CollapseBalls(other.gameObject.GetComponent<BallView>());
                         OpenClampingWindow();
                         temp = _splineUser.result.forward * -1;
-                        //_rigidbody.AddForce(temp * (_ballPower * 3 + 10));
                     }
                 }
             }
@@ -78,6 +84,7 @@ namespace Core
 
         public void CollapseBalls(BallView view)
         {
+
             if (this.gameObject.activeSelf)
             {
                 ChangeBallPower(_ballPower + 1);
@@ -92,21 +99,24 @@ namespace Core
 
         public void PushForward(float ballCount)
         {
-            if (ballCount < 3)
+            if (ballCount < 1)
             {
-                _rigidbody.velocity = _splineUser.result.forward * 2;
+                _rigidbody.velocity = _splineUser.result.forward * 0.7f;
             }
             else
             {
-                _rigidbody.velocity = _splineUser.result.forward * ballCount;
+                _rigidbody.velocity += _splineUser.result.forward * (ballCount-1)*(ballCount-1) *  Time.deltaTime;
             }
-
-           
         }
         
-        public void PushBack(float ballCount, int pow)
+        public void PushBack(float ballCount, float pow)
         {
-            _rigidbody.velocity = _splineUser.result.forward * -ballCount * pow;
+            _rigidbody.velocity += _splineUser.result.forward * -ballCount * pow;
+        }
+
+        public void PushBack(float ballCount)
+        {
+            PushBack(ballCount, _ballPower);
         }
 
         public double GetSplineProgressPercent()
@@ -149,7 +159,6 @@ namespace Core
                 {
                     _textComponents[i].text = $"{Math.Pow(2, power)}";
                 }
-
                 gameObject.tag = power.ToString();
             }
 

@@ -77,13 +77,11 @@ namespace Core
 
         public void ActivateAimLine()
         {
-            Debug.Log("Activate");
             _aimLineActive = true;
         }
 
         public void DeactivateAimLine()
         {
-            Debug.Log("deActivate");
             for (int i = 0; i < _aimSpheres.Count; i++)
             {
                 _aimSpheres[i].transform.position = transform.position + Vector3.down * 5f;
