@@ -30,6 +30,7 @@ namespace Core
 
 
         private int _iterator;
+        private int _tempIndex;
         private double _tempDistance;
         private BallView _lastBallOnSpline;
         private float _regroupWindow = 0;
@@ -96,64 +97,50 @@ namespace Core
 
         public void FindBackBall()
         {
-            _tempBall = null;
-            _tempDistance = 1;
-            for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
+            if (_ballSnakeList.Count > 0)
             {
-                if (_ballSnakeList[_iterator].GetSplineProgressPercent() < _tempDistance)
+                _tempBall = null;
+                _tempDistance = 1;
+                _tempIndex = 0;
+                for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
                 {
-                    _tempDistance = _ballSnakeList[_iterator].GetSplineProgressPercent();
-                    _tempBall = _ballSnakeList[_iterator];
+                    if (_ballSnakeList[_iterator].GetSplineProgressPercent() < _tempDistance)
+                    {
+                        _tempDistance = _ballSnakeList[_iterator].GetSplineProgressPercent();
+                        _tempBall = _ballSnakeList[_iterator];
+                        _tempIndex = _iterator;
+                    }
                 }
+                _ballSnakeList[_tempIndex] = _ballSnakeList[0];
+                _lastBallOnSpline = _tempBall;
+                _ballSnakeList[0] = _tempBall;
             }
-
-            _lastBallOnSpline = _tempBall;
         }
 
-        private void LateUpdate()
+        /*private void LateUpdate()
         {
             switch (_lineState)
             {
                 case LineState.Await:
                 {
-                    for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
-                    {
-                        _ballSnakeList[_iterator].Execute(_ballsClampValue);
-                    }
-
+                    
                     break;
                 }
                 case LineState.Moving:
                 {
-                    for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
-                    {
-                        _ballSnakeList[_iterator].Execute(_ballsClampValue);
-                    }
+                    
 
                     break;
                 }
                 case LineState.Regroup:
                 {
-                    for (_iterator = 0; _iterator < _ballSnakeList.Count; _iterator++)
-                    {
-                        _ballSnakeList[_iterator].Execute(_ballsClampValue);
-                    }
-
-                    if (_regroupWindow > 0)
-                    {
-                        _regroupWindow -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        _regroupWindow = 0;
-                        SetLineState(LineState.Moving);
-                    }
+                    
 
                     break;
                 }
                 default: break;
             }
-        }
+        }*/
 
         private void SetLineState(LineState state)
         {
@@ -183,20 +170,52 @@ namespace Core
 
         private void FixedUpdate()
         {
-            FindBackBall();
             switch (_lineState)
             {
                 case LineState.Await:
                 {
+                    if (_ballSnakeList.Count > 0)
+                    {
+                        _ballSnakeList[0].Execute(_ballSnakeList.Count);
+                        for (_iterator = 1; _iterator < _ballSnakeList.Count; _iterator++)
+                        {
+                            _ballSnakeList[_iterator].Execute(_ballsClampValue);
+                        }
+                    }
                     break;
                 }
                 case LineState.Moving:
                 {
+                    FindBackBall();
+                    _ballSnakeList[0].Execute(_ballSnakeList.Count);
+                    for (_iterator = 1; _iterator < _ballSnakeList.Count; _iterator++)
+                    {
+                        _ballSnakeList[_iterator].Execute(_ballsClampValue);
+                    }
                     _lastBallOnSpline.PushForward(_ballSnakeList.Count * _pushPowerModifier);
+                    for (_iterator = 1; _iterator < _ballSnakeList.Count;_iterator++)
+                    {
+                        _ballSnakeList[_iterator].PushBack(_ballSnakeList.Count, Time.deltaTime * 0.5f);
+                    }
                     break;
                 }
                 case LineState.Regroup:
                 {
+                    _ballSnakeList[0].Execute(_ballSnakeList.Count);
+                    for (_iterator = 1; _iterator < _ballSnakeList.Count; _iterator++)
+                    {
+                        _ballSnakeList[_iterator].Execute(_ballsClampValue);
+                    }
+
+                    if (_regroupWindow > 0)
+                    {
+                        _regroupWindow -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        _regroupWindow = 0;
+                        SetLineState(LineState.Moving);
+                    }
                     break;
                 }
                 default: break;
@@ -206,10 +225,8 @@ namespace Core
         public IEnumerator DeployStarterBalls(int ballAmount, List<int> ballsPower)
         {
             var timeDelay = _deployTime / ballAmount;
-            int iiii = 0;
             for (int i = 0; i < ballAmount; i++)
             {
-                iiii++;
                 _tempBall = GetBallFromPool(ballsPower[i]);
                 //_TempBall going to line
                 //_tempBall.SetSpline(_levelSpline);
@@ -220,7 +237,6 @@ namespace Core
                 FindBackBall();
                 yield return new WaitForSeconds(timeDelay);
             }
-            Debug.Log($"Охуел?{iiii}, BIGBALLSAMOUNT{ballAmount}");
             
             _lineState = LineState.Moving;
         }
@@ -253,23 +269,18 @@ namespace Core
             _ballPool.Enqueue(view);
         }
 
-        public void BallCollapsed(BallView view, int pow)
+        public void BallCollapsed(BallView view, float pow)
         {
+            //todo change values
             ReturnBallInPool(view);
-            for (int i = 0; i < _ballSnakeList.Count; i++)
+            _ballSnakeList[0].StopBall();
+            pow *= 0.5f;
+            for (int i = 1; i < _ballSnakeList.Count; i++)
             {
-                if (_ballSnakeList[i] != _lastBallOnSpline)
-                {
-                    _ballSnakeList[i].PushBack(_ballSnakeList.Count, pow);
-                }
-                else
-                {
-                    _ballSnakeList[i].PushBack(_ballSnakeList.Count, 1);
-                }
-                
+                _ballSnakeList[i].PushBack(_ballSnakeList.Count, pow);
                 SetLineState(LineState.Regroup);
             }
-
+            FindBackBall();
             UpdateScore(CountScore(), _scoreMax);
         }
 

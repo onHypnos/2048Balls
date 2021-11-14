@@ -12,13 +12,19 @@ namespace Core
         [SerializeField] private int _ballPower;
         [SerializeField] private MeshRenderer _renderer;
         [SerializeField] private List<Material> _colorMaterials;
-        [SerializeField] private GameObject _textSphere;
         [SerializeField] private List<TextMeshProUGUI> _textComponents;
+        [SerializeField] private Material RainbowMaterial;
+        [SerializeField] private Material BombMaterial;
         private Rigidbody _rigidbody;
         private Vector3 temp;
 
         private float _clampingVelocityWindow;
-        [Header("ClampingWindow")][Tooltip("Time when clamping not affect on rigidbody")][SerializeField][Range(0.5f,5f)]private float _clampingWindowDuration;
+
+        [Header("ClampingWindow")]
+        [Tooltip("Time when clamping not affect on rigidbody")]
+        [SerializeField]
+        [Range(0.5f, 5f)]
+        private float _clampingWindowDuration;
 
         public int BallPower => _ballPower;
 
@@ -28,20 +34,25 @@ namespace Core
 
         private void OnCollisionEnter(Collision other)
         {
-            if (gameObject.layer == 6) //layer6 = ball
+            if (gameObject.layer.Equals(6)) //layer6 = ball
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     LevelController.Current.SetBallOnSpline(this);
                 }
             }
-            else if (gameObject.layer == 7)
+            else if (gameObject.layer.Equals(7))
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     if (other.gameObject.CompareTag(tag))
                     {
-                        CollapseBalls(other.gameObject.GetComponent<BallView>());
+                        if (other.gameObject.activeSelf)
+                        {
+                            CollapseBalls(other.gameObject.GetComponent<BallView>());
+                            OpenClampingWindow();
+                            temp = _splineUser.result.forward * -1;
+                        }
                     }
                 }
             }
@@ -49,9 +60,9 @@ namespace Core
 
         private void OnCollisionStay(Collision other)
         {
-            if (gameObject.layer == 6) //layer6 = ball
+            if (gameObject.layer.Equals(6)) //layer6 = ball
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     LevelController.Current.SetBallOnSpline(this);
 
@@ -61,16 +72,29 @@ namespace Core
                     other.gameObject.GetComponent<Rigidbody>().AddForce(temp);
                 }
             }
-            else if (gameObject.layer == 7)
+            else if (gameObject.layer.Equals(7))
             {
-                if (other.gameObject.layer == 7)
+                if (other.gameObject.layer.Equals(7))
                 {
                     if (other.gameObject.CompareTag(tag))
                     {
-                        CollapseBalls(other.gameObject.GetComponent<BallView>());
-                        OpenClampingWindow();
-                        temp = _splineUser.result.forward * -1;
-                        //_rigidbody.AddForce(temp * (_ballPower * 3 + 10));
+                        if (other.gameObject.activeSelf)
+                        {
+                            CollapseBalls(other.gameObject.GetComponent<BallView>());
+                            OpenClampingWindow();
+                            temp = _splineUser.result.forward * -1;
+                        }
+                    }
+                }
+            }
+
+            if (gameObject.layer.Equals(9))
+            {
+                if (other.gameObject.layer.Equals(7))
+                {
+                    if (gameObject.activeSelf)
+                    {
+                        other.gameObject.GetComponent<BallView>().CollapseBalls(this);
                     }
                 }
             }
@@ -87,26 +111,35 @@ namespace Core
 
         public void UpdateTextSpherePosition(Transform camera)
         {
-            _textSphere.transform.LookAt(camera);
+            //_textSphere.transform.LookAt(camera);
         }
 
         public void PushForward(float ballCount)
         {
-            if (ballCount < 3)
+            if (ballCount < 1)
             {
-                _rigidbody.velocity = _splineUser.result.forward * 2;
+                _rigidbody.velocity = _splineUser.result.forward * 0.7f;
             }
             else
             {
-                _rigidbody.velocity = _splineUser.result.forward * ballCount;
+                _rigidbody.velocity += _splineUser.result.forward * ballCount * Time.deltaTime;
             }
-
-           
         }
-        
-        public void PushBack(float ballCount, int pow)
+
+
+        public void StopBall()
         {
-            _rigidbody.velocity = _splineUser.result.forward * -ballCount * pow;
+            _rigidbody.velocity = Vector3.zero;
+        }
+
+        public void PushBack(float ballCount, float pow)
+        {
+            _rigidbody.velocity -= _splineUser.result.forward * pow;
+        }
+
+        public void PushBack(float ballCount)
+        {
+            PushBack(ballCount, _ballPower);
         }
 
         public double GetSplineProgressPercent()
@@ -116,7 +149,7 @@ namespace Core
 
         public void Execute(float clampValue)
         {
-            transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.6f);
+            transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.8f);
             //var magnitude = _rigidbody.velocity.magnitude;
             //_rigidbody.velocity = _splineUser.result.forward * magnitude*0.95f;
             if (_clampingVelocityWindow == 0)
@@ -125,7 +158,7 @@ namespace Core
                     Vector3.ClampMagnitude(Vector3.Project(_rigidbody.velocity, _splineUser.result.forward),
                         clampValue);
             }
-            else if(_clampingVelocityWindow > 0)
+            else if (_clampingVelocityWindow > 0)
             {
                 _clampingVelocityWindow -= Time.deltaTime;
             }

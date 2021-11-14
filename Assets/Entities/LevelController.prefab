@@ -51,9 +51,9 @@ MonoBehaviour:
   _ballExample: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
   _playerPrefab: {fileID: 7208961100566729712, guid: 84c931f6d1ca47d4491a74b8dc5c9a1a, type: 3}
   _starterBalls: 0000000001000000
-  _ballsClampValue: 2
+  _ballsClampValue: 0.8
   _baseRegroupWindowDuration: 0.4
-  _deployTime: 0.8
-  _pushPowerModifier: 0.23
+  _deployTime: 0.42
+  _pushPowerModifier: 1
   _scoreCurrent: 0
-  _scoreMax: 0
+  _scoreMax: 300

@@ -71,19 +71,17 @@ namespace Core
             view.transform.position = transform.position + Vector3.up * 0.45f; //TODO выделить новую переменную
             view.gameObject.SetActive(true);
             view.RigidBody.AddForce((_currentTarget - view.transform.position).normalized * 15f, ForceMode.Impulse);
-            _animator.SetTrigger("Attack");
             
+            _animator.SetTrigger("Attack");
         }
 
         public void ActivateAimLine()
         {
-            Debug.Log("Activate");
             _aimLineActive = true;
         }
 
         public void DeactivateAimLine()
         {
-            Debug.Log("deActivate");
             for (int i = 0; i < _aimSpheres.Count; i++)
             {
                 _aimSpheres[i].transform.position = transform.position + Vector3.down * 5f;
@@ -93,9 +91,11 @@ namespace Core
 
         public void UpdateRotation(Vector3 target)
         {
-            _currentTarget = target;
-            transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.LookRotation(target - transform.position ), Time.deltaTime * 10f);
+            _currentTarget.x = target.x;
+            _currentTarget.y = transform.position.y;
+            _currentTarget.z = target.z;
+             transform.rotation = Quaternion.Lerp(transform.rotation,
+                Quaternion.LookRotation(_currentTarget - transform.position ), Time.deltaTime * 10f);
         }
     }
 }
