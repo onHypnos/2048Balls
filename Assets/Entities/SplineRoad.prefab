@@ -637,7 +637,7 @@ MonoBehaviour:
   _markDynamic: 1
   _size: 1
   _color: {r: 1, g: 1, b: 1, a: 1}
-  _offset: {x: 0, y: 0, z: 0}
+  _offset: {x: 0, y: -0.4, z: 0}
   _normalMethod: 1
   _calculateTangents: 1
   _useSplineSize: 1

@@ -12,13 +12,19 @@ namespace Core
         [SerializeField] private int _ballPower;
         [SerializeField] private MeshRenderer _renderer;
         [SerializeField] private List<Material> _colorMaterials;
-        [SerializeField] private GameObject _textSphere;
         [SerializeField] private List<TextMeshProUGUI> _textComponents;
+        [SerializeField] private Material RainbowMaterial;
+        [SerializeField] private Material BombMaterial;
         private Rigidbody _rigidbody;
         private Vector3 temp;
 
         private float _clampingVelocityWindow;
-        [Header("ClampingWindow")][Tooltip("Time when clamping not affect on rigidbody")][SerializeField][Range(0.5f,5f)]private float _clampingWindowDuration;
+
+        [Header("ClampingWindow")]
+        [Tooltip("Time when clamping not affect on rigidbody")]
+        [SerializeField]
+        [Range(0.5f, 5f)]
+        private float _clampingWindowDuration;
 
         public int BallPower => _ballPower;
 
@@ -35,8 +41,7 @@ namespace Core
                     LevelController.Current.SetBallOnSpline(this);
                 }
             }
-            else 
-            if (gameObject.layer.Equals(7))
+            else if (gameObject.layer.Equals(7))
             {
                 if (other.gameObject.layer.Equals(7))
                 {
@@ -67,8 +72,7 @@ namespace Core
                     other.gameObject.GetComponent<Rigidbody>().AddForce(temp);
                 }
             }
-            else 
-            if (gameObject.layer.Equals(7))
+            else if (gameObject.layer.Equals(7))
             {
                 if (other.gameObject.layer.Equals(7))
                 {
@@ -83,11 +87,21 @@ namespace Core
                     }
                 }
             }
+
+            if (gameObject.layer.Equals(9))
+            {
+                if (other.gameObject.layer.Equals(7))
+                {
+                    if (gameObject.activeSelf)
+                    {
+                        other.gameObject.GetComponent<BallView>().CollapseBalls(this);
+                    }
+                }
+            }
         }
 
         public void CollapseBalls(BallView view)
         {
-
             if (this.gameObject.activeSelf)
             {
                 ChangeBallPower(_ballPower + 1);
@@ -97,8 +111,7 @@ namespace Core
 
         public void UpdateTextSpherePosition(Transform camera)
         {
-            _textSphere.transform.LookAt(camera);
-            
+            //_textSphere.transform.LookAt(camera);
         }
 
         public void PushForward(float ballCount)
@@ -109,7 +122,7 @@ namespace Core
             }
             else
             {
-                _rigidbody.velocity += _splineUser.result.forward * ballCount *  Time.deltaTime;
+                _rigidbody.velocity += _splineUser.result.forward * ballCount * Time.deltaTime;
             }
         }
 
@@ -145,7 +158,7 @@ namespace Core
                     Vector3.ClampMagnitude(Vector3.Project(_rigidbody.velocity, _splineUser.result.forward),
                         clampValue);
             }
-            else if(_clampingVelocityWindow > 0)
+            else if (_clampingVelocityWindow > 0)
             {
                 _clampingVelocityWindow -= Time.deltaTime;
             }
@@ -169,6 +182,7 @@ namespace Core
                 {
                     _textComponents[i].text = $"{Math.Pow(2, power)}";
                 }
+
                 gameObject.tag = power.ToString();
             }
 
