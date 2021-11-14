@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InGameUIView : BaseMenuView
 {
@@ -10,6 +11,7 @@ public class InGameUIView : BaseMenuView
     [SerializeField] private Button _buttonPause;
     [SerializeField] private Slider _slider;
     [SerializeField] private UIStarView[] _stars;
+    [SerializeField] private TextMeshProUGUI _textScore;
 
     [Header("Settings")]
     [SerializeField] [Range(0.0f, 1.0f)] private float _star1Value;
@@ -34,6 +36,7 @@ public class InGameUIView : BaseMenuView
         }
 
         _slider.value = 0.0f;
+        _textScore.text = "0";
     }
 
 
@@ -80,6 +83,8 @@ public class InGameUIView : BaseMenuView
         {
             ActivateStar(3);
         }
+
+        _textScore.text = $"{currentPoints}";
     }
 
     public void ActivateStar(int starNumber)
