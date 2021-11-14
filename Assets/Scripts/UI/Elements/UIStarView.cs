@@ -38,10 +38,11 @@ public class UIStarView : BaseUIElementView
     {
         if (_isActive)
         {
+            _animator.SetBool("Activate", false);
             return;
         }
 
-        _animator.Play("UI star animation");
+        _animator.SetBool("Activate", true);
 
         _backGround.enabled = false;
         _front.enabled = true;
