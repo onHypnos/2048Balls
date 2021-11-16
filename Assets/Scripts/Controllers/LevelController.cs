@@ -250,8 +250,9 @@ namespace Core
             }
 
             _tempBall = _ballPool.Dequeue();
-            _tempBall.ChangeBallPower(ballPower);
             _tempBall.gameObject.layer = 6;
+            _tempBall.ChangeBallPower(ballPower);
+            
             return _tempBall;
         }
 
@@ -274,7 +275,7 @@ namespace Core
             //todo change values
             ReturnBallInPool(view);
             _ballSnakeList[0].StopBall();
-            pow *= 0.5f;
+            pow *= 0.2f;
             for (int i = 1; i < _ballSnakeList.Count; i++)
             {
                 _ballSnakeList[i].PushBack(_ballSnakeList.Count, pow);

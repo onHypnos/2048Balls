@@ -847,6 +847,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
+      propertyPath: _deployTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _LevelSpline
       value: 
       objectReference: {fileID: 822481329}
@@ -860,11 +864,11 @@ PrefabInstance:
       objectReference: {fileID: 428292373}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _ballsClampValue
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.size
-      value: 7
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[1]
@@ -872,7 +876,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[2]
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[3]
@@ -892,19 +896,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[7]
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[8]
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[9]
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[10]
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[11]

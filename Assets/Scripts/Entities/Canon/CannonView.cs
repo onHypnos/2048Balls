@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ namespace Core
         [SerializeField]private List<GameObject> _aimSpheres;
         [SerializeField]private GameObject _aimSphereExample;
 
+        private Transform _aiTarget;
+        
         private void Awake()
         {
             if (_animator == null)
@@ -27,8 +30,10 @@ namespace Core
                     Debug.Log("Animator not Set",this.gameObject);
                 }
             }
-
-            if (_aimSphereExample != null)
+            if (!_playerControlled)
+            {
+                StartCoroutine(StartAIMovings());
+            }else if (_aimSphereExample != null)
             {
                 _aimSpheres = new List<GameObject>();
                 for (int i = 0; i < 10; i++)
@@ -38,7 +43,29 @@ namespace Core
             }
         }
 
+        private IEnumerator StartAIMovings()
+        {
+            //TODO AiShitHere
+            StartCoroutine(UpdateAiTarget());
+            while (this != null)
+            {
+                Debug.LogWarning("AI strategy not set");
+                
+                yield return new WaitForSeconds(2f);
+            }
 
+            yield return null;
+        }
+
+        private IEnumerator UpdateAiTarget()
+        {
+            if (this == null)
+            {
+                yield break;
+            }
+            
+            yield return new WaitForSeconds(2f);
+        }
 
         private Ray _rayForward;
         private RaycastHit hitInfo;

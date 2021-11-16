@@ -8,13 +8,20 @@ namespace Core
 {
     public class BallView : MonoBehaviour
     {
-        [SerializeField] private SplineTracer _splineUser;
+        private static Material[] _tempMaterials;
+        [Header("Properties")][SerializeField] private SplineTracer _splineUser;
         [SerializeField] private int _ballPower;
         [SerializeField] private MeshRenderer _renderer;
         [SerializeField] private List<Material> _colorMaterials;
-        [SerializeField] private List<TextMeshProUGUI> _textComponents;
-        [SerializeField] private Material RainbowMaterial;
-        [SerializeField] private Material BombMaterial;
+        [SerializeField] private List<Mesh> _numberMeshes;
+        //[SerializeField] private List<TextMeshProUGUI> _textComponents;
+        [SerializeField] private Material _baseNumberMaterial;
+        [Header("Rainbow")][SerializeField] private Material _rainbowMaterial;
+        [SerializeField] private Mesh _rainbowMesh;
+        [Header("Bomb")][SerializeField] private Material _bombMaterial;
+        [SerializeField] private MeshFilter _meshFilter;
+        private Mesh _baseMesh;
+        
         private Rigidbody _rigidbody;
         private Vector3 temp;
 
@@ -55,6 +62,15 @@ namespace Core
                         }
                     }
                 }
+            }else if (gameObject.layer.Equals(9))
+            {
+                if (other.gameObject.layer.Equals(7))
+                {
+                    if (gameObject.activeSelf)
+                    {
+                        other.gameObject.GetComponent<BallView>().CollapseBalls(this);
+                    }
+                }
             }
         }
 
@@ -86,9 +102,7 @@ namespace Core
                         }
                     }
                 }
-            }
-
-            if (gameObject.layer.Equals(9))
+            }else if (gameObject.layer.Equals(9))
             {
                 if (other.gameObject.layer.Equals(7))
                 {
@@ -172,20 +186,39 @@ namespace Core
         {
             _clampingVelocityWindow = _clampingWindowDuration;
         }
-
+        
+        
         public void ChangeBallPower(int power)
         {
+            /*
             if (power < 12)
             {
-                _renderer.sharedMaterial = _colorMaterials[power];
+                
                 for (int i = 0; i < _textComponents.Count; i++)
                 {
                     _textComponents[i].text = $"{Math.Pow(2, power)}";
                 }
 
                 gameObject.tag = power.ToString();
-            }
+            }*/
 
+            if (power < 16 && power >= 0)
+            {
+                _tempMaterials = _renderer.materials;
+                _tempMaterials[0] = _colorMaterials[power];
+                _tempMaterials[1] = _baseNumberMaterial;
+                _renderer.materials = _tempMaterials;
+                _meshFilter.mesh = _numberMeshes[power];
+                gameObject.tag = power.ToString();
+            }else if (power.Equals(-1))
+            {
+                _tempMaterials = _renderer.materials;
+                _tempMaterials[0] = _rainbowMaterial;
+                _tempMaterials[1] = _rainbowMaterial;
+                _renderer.materials = _tempMaterials;
+                gameObject.layer = 9;
+                _meshFilter.mesh = _rainbowMesh;
+            }
             _ballPower = power;
         }
 
