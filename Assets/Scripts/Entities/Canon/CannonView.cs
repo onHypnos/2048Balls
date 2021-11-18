@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 namespace Core
@@ -13,7 +15,10 @@ namespace Core
         public bool PlayerControl => _playerControlled;
         [SerializeField]private List<GameObject> _aimSpheres;
         [SerializeField]private GameObject _aimSphereExample;
-
+        [SerializeField] private ParticleSystem _fireParticle;
+        private Transform _aiTarget;
+        [SerializeField] private MMFeedbacks _sound;
+        
         private void Awake()
         {
             if (_animator == null)
@@ -27,8 +32,10 @@ namespace Core
                     Debug.Log("Animator not Set",this.gameObject);
                 }
             }
-
-            if (_aimSphereExample != null)
+            if (!_playerControlled)
+            {
+                StartCoroutine(StartAIMovings());
+            }else if (_aimSphereExample != null)
             {
                 _aimSpheres = new List<GameObject>();
                 for (int i = 0; i < 10; i++)
@@ -38,7 +45,29 @@ namespace Core
             }
         }
 
+        private IEnumerator StartAIMovings()
+        {
+            //TODO AiShitHere
+            StartCoroutine(UpdateAiTarget());
+            while (this != null)
+            {
+                Debug.LogWarning("AI strategy not set");
+                
+                yield return new WaitForSeconds(2f);
+            }
 
+            yield return null;
+        }
+
+        private IEnumerator UpdateAiTarget()
+        {
+            if (this == null)
+            {
+                yield break;
+            }
+            
+            yield return new WaitForSeconds(2f);
+        }
 
         private Ray _rayForward;
         private RaycastHit hitInfo;
@@ -72,7 +101,23 @@ namespace Core
             view.gameObject.SetActive(true);
             view.RigidBody.AddForce((_currentTarget - view.transform.position).normalized * 15f, ForceMode.Impulse);
             
-            _animator.SetTrigger("Attack");
+            _animator.SetBool("Attack", true);
+        }
+
+        public void OnAnimatorAttack()
+        {
+            
+            if (_fireParticle.gameObject.activeSelf)
+            {
+                _fireParticle.Play();
+            }
+            else
+            {
+                _fireParticle.gameObject.SetActive(true);
+                _fireParticle.Play();
+            }
+            _sound.PlayFeedbacks();
+            _animator.SetBool("Attack", false);
         }
 
         public void ActivateAimLine()

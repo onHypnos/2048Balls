@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1690bb01d509a439fc991a10f8278f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateMethod: 0
+  updateMethod: 1
   _spline: {fileID: 0}
   _autoUpdate: 1
   _rotationModifier:
@@ -645,7 +645,7 @@ MonoBehaviour:
   _rotation: 0
   _flipFaces: 0
   _doubleSided: 0
-  _uvMode: 3
+  _uvMode: 1
   _uvScale: {x: 1, y: 1}
   _uvOffset: {x: 0, y: 0}
   _uvRotation: 0

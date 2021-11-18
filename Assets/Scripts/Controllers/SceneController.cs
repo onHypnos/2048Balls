@@ -31,7 +31,6 @@ namespace Core
 
         public void LoadNextScene()
         {
-            Debug.Log(">???>>?");
             if (_currentLevelController != null)
             {
                 UIEvents.Current.OnButtonStartGame -= _currentLevelController.LevelStart;
@@ -65,6 +64,7 @@ namespace Core
         {
             _currentSceneName = sceneName;
             SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            
         }
 
         public bool InitializeLevelController(LevelController controller)

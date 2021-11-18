@@ -33,8 +33,11 @@ namespace Core
             FindCannons();
             SubscribeEvents();
             _cameraMain = Camera.main;
-            _currentBallBasePosition = _playerCannon[0].transform.position + Vector3.up * 3f + Vector3.back;
+            /*_currentBallBasePosition = _playerCannon[0].transform.position + Vector3.up * 3f + Vector3.back;
             _alternateBallBasePosition = _playerCannon[0].transform.position + Vector3.up + Vector3.left * 2f + Vector3.back;
+            */
+            _currentBallBasePosition = _cameraMain.transform.position + _cameraMain.transform.forward * 7f + _cameraMain.transform.up * -4.5f;
+            _alternateBallBasePosition = _currentBallBasePosition +  _cameraMain.transform.forward * 3f + _cameraMain.transform.right * -1.3f + _cameraMain.transform.up * -2f;
         }
 
         private void OnDestroy()
@@ -79,7 +82,7 @@ namespace Core
 
         private int GetRandomBallPower()
         {
-            return UnityEngine.Random.Range(0,5);
+            return UnityEngine.Random.Range(-1,5);
         }
 
         public void SetLevelController(LevelController controller)
@@ -101,7 +104,8 @@ namespace Core
             {
                 _currentBall.transform.position = _currentBallBasePosition;
             }
-            _currentBall.transform.LookAt(_cameraMain.transform);
+            //_currentBall.transform.LookAt(_cameraMain.transform);
+            _currentBall.transform.rotation = Quaternion.LookRotation(_cameraMain.transform.position - _currentBall.transform.position, _cameraMain.transform.up);
             _currentBall.gameObject.SetActive(true);
             
         }
@@ -110,7 +114,8 @@ namespace Core
         {
             _alternateBall = view;
             _alternateBall.transform.position = _alternateBallBasePosition;
-            _alternateBall.transform.LookAt(_cameraMain.transform);
+            //_alternateBall.transform.LookAt(_cameraMain.transform);
+            _alternateBall.transform.rotation = Quaternion.LookRotation(_cameraMain.transform.position - _currentBall.transform.position, _cameraMain.transform.up);
             _alternateBall.gameObject.SetActive(true);
         }
 

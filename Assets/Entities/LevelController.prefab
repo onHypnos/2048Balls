@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1081057793129361530}
   - component: {fileID: 1081057793129361531}
+  - component: {fileID: 3812114174408982135}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -51,9 +52,55 @@ MonoBehaviour:
   _ballExample: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
   _playerPrefab: {fileID: 7208961100566729712, guid: 84c931f6d1ca47d4491a74b8dc5c9a1a, type: 3}
   _starterBalls: 0000000001000000
-  _ballsClampValue: 0.8
-  _baseRegroupWindowDuration: 0.4
-  _deployTime: 0.42
-  _pushPowerModifier: 1
+  _ballsClampValue: 0.75
+  _baseRegroupWindowDuration: 0.15
+  _deployTime: 0.5
+  _pushPowerModifier: 1.5
   _scoreCurrent: 0
   _scoreMax: 300
+  _splineRoad: {fileID: 0}
+  _mm: {fileID: 3812114174408982135}
+--- !u!114 &3812114174408982135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081057793129361528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841b72de2996c5c40bfb394f3d0e0a98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Feedbacks: []
+  InitializationMode: 2
+  SafeMode: 3
+  Direction: 0
+  AutoChangeDirectionOnEnd: 0
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  DurationMultiplier: 1
+  DisplayFullDurationDetails: 0
+  CooldownDuration: 0
+  InitialDelay: 0
+  CanPlayWhileAlreadyPlaying: 1
+  FeedbacksIntensity: 1
+  Events:
+    TriggerMMFeedbacksEvents: 0
+    TriggerUnityEvents: 1
+    OnPlay:
+      m_PersistentCalls:
+        m_Calls: []
+    OnPause:
+      m_PersistentCalls:
+        m_Calls: []
+    OnResume:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRevert:
+      m_PersistentCalls:
+        m_Calls: []
+    OnComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  DebugActive: 0

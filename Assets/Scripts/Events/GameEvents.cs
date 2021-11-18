@@ -35,5 +35,12 @@ namespace Core
         {
             OnScoreUpdate?.Invoke(current,max);
         }
+
+        public event Action OnLevelLoaded;
+
+        public void LevelLoaded()
+        {
+            OnLevelLoaded?.Invoke();;
+        }
     }
 }
