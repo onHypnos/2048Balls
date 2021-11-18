@@ -12,6 +12,11 @@ namespace Core
             Current = this;
         }
 
+        public void InitializeParticleGO()
+        {
+            
+        }
+
         public void CallParticle(Vector3 position)
         {
             

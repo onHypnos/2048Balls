@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Dreamteck.Splines;
+using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Subsystems;
@@ -28,7 +30,6 @@ namespace Core
 
         [SerializeField] [Range(0.1f, 3f)] private float _ballsClampValue;
 
-
         private int _iterator;
         private int _tempIndex;
         private double _tempDistance;
@@ -39,6 +40,12 @@ namespace Core
         [SerializeField] [Range(0.01f, 2f)] private float _pushPowerModifier;
         [SerializeField] private int _scoreCurrent;
         [SerializeField] private int _scoreMax;
+
+        [Header("SplineRoadMeshRenderer")] 
+        [SerializeField] private MeshRenderer _splineRoad;
+        [Header("MMFeedbacks")]
+        [SerializeField] private MMFeedbacks _mm;
+
 
         private void Awake()
         {
@@ -76,7 +83,12 @@ namespace Core
             {
                 Debug.LogWarning("Player prefab is not set, failed in LevelController", this.gameObject);
             }
+
+            _splineRoad.material = DesignController.Current.GetRoadMaterial();
+            GameEvents.Current.LevelLoaded();
         }
+        
+        
 
         private void InitializePool<T>(Queue<T> queue, GameObject example, int amount, Vector3 poolPosition)
         {
@@ -245,7 +257,7 @@ namespace Core
         {
             if (_ballPool == null || _ballPool.Count == 0)
             {
-                Debug.LogWarning("Pool is null"); //TODO разобраться с порядком вызова
+                //Debug.LogWarning("Pool is null"); TODO разобраться с порядком вызова?в целом похуй
                 InitializePool<BallView>(_ballPool, _ballExample, 50, _starterNode.position + Vector3.right);
             }
 
@@ -282,6 +294,7 @@ namespace Core
                 SetLineState(LineState.Regroup);
             }
             FindBackBall();
+            
             UpdateScore(CountScore(), _scoreMax);
         }
 

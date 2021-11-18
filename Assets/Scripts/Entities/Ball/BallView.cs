@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Dreamteck.Splines;
+using MoreMountains.Feedbacks;
 using TMPro;
 using UnityEngine;
 
@@ -32,6 +33,9 @@ namespace Core
         [SerializeField]
         [Range(0.5f, 5f)]
         private float _clampingWindowDuration;
+        
+        [Header("MMFeedbacks")]
+        [SerializeField] private MMFeedbacks _mm;
 
         public int BallPower => _ballPower;
 
@@ -120,6 +124,7 @@ namespace Core
             {
                 ChangeBallPower(_ballPower + 1);
                 LevelController.Current.BallCollapsed(view, _ballPower + 1);
+                _mm.PlayFeedbacks();
             }
         }
 
@@ -148,7 +153,7 @@ namespace Core
 
         public void PushBack(float ballCount, float pow)
         {
-            _rigidbody.velocity -= _splineUser.result.forward * pow;
+            _rigidbody.velocity += _splineUser.result.forward * pow * -1.5f;
         }
 
         public void PushBack(float ballCount)

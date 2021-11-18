@@ -36,7 +36,7 @@ namespace Core
             /*_currentBallBasePosition = _playerCannon[0].transform.position + Vector3.up * 3f + Vector3.back;
             _alternateBallBasePosition = _playerCannon[0].transform.position + Vector3.up + Vector3.left * 2f + Vector3.back;
             */
-            _currentBallBasePosition = _cameraMain.transform.position + _cameraMain.transform.forward * 7f + _cameraMain.transform.up * -3f;
+            _currentBallBasePosition = _cameraMain.transform.position + _cameraMain.transform.forward * 7f + _cameraMain.transform.up * -4.5f;
             _alternateBallBasePosition = _currentBallBasePosition +  _cameraMain.transform.forward * 3f + _cameraMain.transform.right * -1.3f + _cameraMain.transform.up * -2f;
         }
 
