@@ -11,10 +11,12 @@ public class UIController : MonoBehaviour
     public void Awake()
     {
         UIEvents.Current.OnButtonStartGame += StartGame;
+        UIEvents.Current.OnButtonStartGame += ClearInGameUI;
         UIEvents.Current.OnButtonPauseGame += PauseGame;
         UIEvents.Current.OnButtonResumeGame += StartGame;
         UIEvents.Current.OnButtonNextLevel += NextLevel;
         UIEvents.Current.OnButtonRestartGame += RestartGame;
+
         GameEvents.Current.OnLevelVictory += WinGame;
         GameEvents.Current.OnLevelFailed += LoseGame;
         GameEvents.Current.OnScoreUpdate += UpdateInGameSlider;
@@ -66,6 +68,11 @@ public class UIController : MonoBehaviour
     {
         //TODO SameThatNextLevel
         SwitchUI(UIState.MainMenu);
+    }
+
+    private void ClearInGameUI()
+    {
+        _inGameUI.DeactivateStars();
     }
 
     public void AddView(BaseMenuView view)
