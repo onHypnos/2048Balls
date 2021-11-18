@@ -33,6 +33,7 @@ namespace Core
 
         public Material GetRoadMaterial()
         {
+            UpdateEnvieromentMaterials();
             return _roadMaterial;
         }
 
@@ -43,7 +44,7 @@ namespace Core
             _roadMaterial = _arrowMaterials[i];
         }
 
-
+        private int _iterator;
         private void FixedUpdate()
         {
             _rainbowMaterial.mainTextureOffset += tempDelta;
@@ -54,10 +55,14 @@ namespace Core
 
             if (_needMovingRoad)
             {
-                _roadMaterial.mainTextureOffset -= tempRoadDelta;
-                if (_roadMaterial.mainTextureOffset.y <= -1)
+                for (_iterator = 0; _iterator < _arrowMaterials.Count; _iterator++)
                 {
-                    _roadMaterial.mainTextureOffset = Vector2.zero;
+                    _arrowMaterials[_iterator].mainTextureOffset -= tempRoadDelta;
+
+                    if (_arrowMaterials[_iterator].mainTextureOffset.y <= -1)
+                    {
+                        _arrowMaterials[_iterator].mainTextureOffset = Vector2.zero;
+                    }
                 }
             }
         }
