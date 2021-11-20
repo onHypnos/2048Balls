@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Dreamteck.Splines;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Subsystems;
@@ -22,8 +23,8 @@ namespace Core
         [SerializeField] private LineState _lineState; //LinesState
         [SerializeField] private PlayerView _currentPlayer;
         [Header("Example")] [SerializeField] private GameObject _ballExample;
-
         [SerializeField] private GameObject _playerPrefab;
+        [SerializeField] private GameObject _enemyMinion;
 
         [Header("Properties")] [SerializeField]
         private List<int> _starterBalls;
@@ -46,7 +47,7 @@ namespace Core
         [Header("MMFeedbacks")]
         [SerializeField] private MMFeedbacks _mm;
 
-
+        public BallView LastBallBall => _lastBallOnSpline;
         private void Awake()
         {
             Current = this;
@@ -253,6 +254,11 @@ namespace Core
             _lineState = LineState.Moving;
         }
 
+        [Button]public void DebugDeployBalls()
+        {
+            StartCoroutine(DeployStarterBalls(4, _starterBalls));
+        }
+
         public BallView GetBallFromPool(int ballPower)
         {
             if (_ballPool == null || _ballPool.Count == 0)
@@ -320,15 +326,15 @@ namespace Core
             UpdateScore(0, _scoreMax);
             StartCoroutine(DeployStarterBalls(_starterBalls.Count, _starterBalls));
             _currentPlayer.SetLevelController(this);
-            Debug.Log("Start level");
             GameEvents.Current.LevelStart();
             
             _currentPlayer.SetState(PlayerState.CanAttack);
         }
 
-        public void LevelVictory()
+        [Button]public void LevelVictory()
         {
             LevelEnd();
+            _mm.PlayFeedbacks();
             GameEvents.Current.LevelVictory();
         }
 
@@ -362,6 +368,7 @@ namespace Core
             _scoreCurrent = currentScore;
             GameEvents.Current.ScoreUpdate(_scoreCurrent, scoreMax);
         }
+
     }
 
     internal enum LineState

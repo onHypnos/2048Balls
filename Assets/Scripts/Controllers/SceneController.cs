@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ namespace Core
         [SerializeField] private List<string> _scenes;
         [SerializeField] private bool LevelDebug = false;
         [SerializeField] private LevelController _currentLevelController;
+        [SerializeField] private MMFeedbacks _mm;
         private string _currentSceneName;
         private void Awake()
         {
@@ -26,8 +28,15 @@ namespace Core
             else
             {
             }
+            
+            StartMusic();
         }
-
+        
+        private void StartMusic()
+        {
+            _mm.Initialization();
+            _mm.PlayFeedbacks(); 
+        }
 
         public void LoadNextScene()
         {
