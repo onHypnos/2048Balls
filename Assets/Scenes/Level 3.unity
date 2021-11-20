@@ -972,6 +972,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
+      propertyPath: _scoreMax
+      value: 800
+      objectReference: {fileID: 0}
+    - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _splineRoad
       value: 
       objectReference: {fileID: 248136356040556155}
@@ -1306,6 +1310,14 @@ PrefabInstance:
     - target: {fileID: 1081057793129361531, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
       propertyPath: _starterBalls.Array.data[79]
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3812114174408982135, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
+      propertyPath: Feedbacks.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3812114174408982135, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}
+      propertyPath: Feedbacks.Array.data[0]
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d89cc7d57308cc0468cc1d4c04442c63, type: 3}

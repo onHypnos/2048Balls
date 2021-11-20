@@ -51,11 +51,12 @@ MonoBehaviour:
   _currentPlayer: {fileID: 0}
   _ballExample: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
   _playerPrefab: {fileID: 7208961100566729712, guid: 84c931f6d1ca47d4491a74b8dc5c9a1a, type: 3}
+  _enemyMinion: {fileID: 3122457052755037727, guid: 82824ef9f6a639344b673eb7fe212698, type: 3}
   _starterBalls: 0000000001000000
   _ballsClampValue: 0.75
   _baseRegroupWindowDuration: 0.15
   _deployTime: 0.5
-  _pushPowerModifier: 1.5
+  _pushPowerModifier: 1.55
   _scoreCurrent: 0
   _scoreMax: 300
   _splineRoad: {fileID: 0}
