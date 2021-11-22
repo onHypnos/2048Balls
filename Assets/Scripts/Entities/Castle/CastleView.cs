@@ -9,7 +9,7 @@ namespace Core
         {
             if (other.gameObject.layer == 7)
             {
-                LevelController.Current.LevelVictory();
+                LevelController.Current.LevelFailed();
             }
         }
     }

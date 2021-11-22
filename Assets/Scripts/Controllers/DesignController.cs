@@ -15,23 +15,31 @@ namespace Core
         [Header("Enviorment settings")] 
         [SerializeField] private MeshRenderer _envieromentGO;
         [SerializeField] private List<Material> _envieromentList;
+
+        [SerializeField] private Material _rockMaterial;
+        
         [Header("RoadSettings")]
         [SerializeField] private bool _needMovingRoad;
         [SerializeField] private Material _roadMaterial;
         [SerializeField] private List<Material> _arrowMaterials;
-        
         private Vector2 tempDelta = Vector2.one * 0.01f;
         private Vector2 tempRoadDelta = Vector2.up * 0.01f;
-
         
+        [SerializeField]private float _gradientValue;
+        private string _gradientName = "_GradientCenterY";
+        private int _gradientCounter;
+        [SerializeField]private float _gradientMinBound = -10;
+        [SerializeField]private float _gradientMaxBound = -5;
         private void Awake()
         {
             Current = this;
             GameEvents.Current.OnLevelLoaded += UpdateEnvieromentMaterials;
             UpdateEnvieromentMaterials();
+            _gradientValue = _gradientMinBound;
         }
 
         
+
 
         public Material GetRoadMaterial()
         {
@@ -47,8 +55,22 @@ namespace Core
         }
 
         private int _iterator;
+
+        public void PulseBackgroundGradient()
+        {
+            _gradientValue = _gradientMaxBound;
+        }
+
         private void FixedUpdate()
         {
+            if (_gradientValue >= _gradientMinBound)
+            {
+                _gradientValue -= Time.fixedDeltaTime;
+            }
+            _rockMaterial.SetFloat(_gradientName, _gradientValue);
+            
+            
+            
             _rainbowMaterial.mainTextureOffset += tempDelta;
             if (_rainbowMaterial.mainTextureOffset.y >= 1)
             {

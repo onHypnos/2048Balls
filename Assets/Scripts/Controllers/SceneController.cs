@@ -17,6 +17,7 @@ namespace Core
         private void Awake()
         {
             UIEvents.Current.OnButtonNextLevel += LoadNextScene;
+            UIEvents.Current.OnButtonRestartGame += ReloadScene;
         }
 
         private void Start()
@@ -29,7 +30,7 @@ namespace Core
             {
             }
             
-            StartMusic();
+            //StartMusic();
         }
         
         private void StartMusic()
@@ -43,6 +44,7 @@ namespace Core
             if (_currentLevelController != null)
             {
                 UIEvents.Current.OnButtonStartGame -= _currentLevelController.LevelStart;
+                
             }
 
             var currentLevelNumber = PlayerPrefs.GetInt("PlayerLevel");

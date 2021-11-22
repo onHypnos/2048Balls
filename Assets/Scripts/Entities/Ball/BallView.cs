@@ -4,44 +4,48 @@ using Dreamteck.Splines;
 using MoreMountains.Feedbacks;
 using TMPro;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Core
 {
     public class BallView : MonoBehaviour
     {
         private static Material[] _tempMaterials;
-        [Header("Properties")][SerializeField] private SplineTracer _splineUser;
+
+        [Header("Properties")] 
+        [SerializeField] private SplineTracer _splineUser;
         [SerializeField] private int _ballPower;
         [SerializeField] private MeshRenderer _renderer;
         [SerializeField] private List<Material> _colorMaterials;
         [SerializeField] private List<Mesh> _numberMeshes;
-        //[SerializeField] private List<TextMeshProUGUI> _textComponents;
         [SerializeField] private Material _baseNumberMaterial;
-        [Header("Rainbow")][SerializeField] private Material _rainbowMaterial;
+        [Header("Rainbow")] 
+        [SerializeField] private Material _rainbowMaterial;
         [SerializeField] private Mesh _rainbowMesh;
-        [Header("Bomb")][SerializeField] private Material _bombMaterial;
+        [Header("Bomb")] 
+        [SerializeField] private Material _bombMaterial;
         [SerializeField] private MeshFilter _meshFilter;
-        private Mesh _baseMesh;
+        [Header("Riders properties")] [SerializeField]
+        private Queue<RiderView> _riders = new Queue<RiderView>();
         
-        private Rigidbody _rigidbody;
-        private Vector3 temp;
-
-        private float _clampingVelocityWindow;
-
         [Header("ClampingWindow")]
         [Tooltip("Time when clamping not affect on rigidbody")]
-        [SerializeField]
-        [Range(0.5f, 5f)]
-        private float _clampingWindowDuration;
+        [SerializeField][Range(0.5f, 5f)] private float _clampingWindowDuration;
+
+        [Header("MMFeedbacks")] 
+        [SerializeField]private MMFeedbacks _mm;
         
-        [Header("MMFeedbacks")]
-        [SerializeField] private MMFeedbacks _mm;
-
+        private Mesh _baseMesh;
+        private Rigidbody _rigidbody;
+        private Vector3 temp;
+        private float _clampingVelocityWindow;
+        
         public int BallPower => _ballPower;
-
-
         public Rigidbody RigidBody => _rigidbody;
-
+        public int GetRidersCount()
+        {
+            return _riders.Count;
+        }
 
         private void OnCollisionEnter(Collision other)
         {
@@ -50,23 +54,31 @@ namespace Core
                 if (other.gameObject.layer.Equals(7))
                 {
                     LevelController.Current.SetBallOnSpline(this);
+
+                    temp = _splineUser.result.forward * -1;
+                    _rigidbody.AddForce(temp);
+                    other.gameObject.GetComponent<Rigidbody>().AddForce(temp);
                 }
             }
             else if (gameObject.layer.Equals(7))
             {
-                if (other.gameObject.layer.Equals(7))
+                if (!LevelController.Current.LineState.Equals(LineState.Await))
                 {
-                    if (other.gameObject.CompareTag(tag))
+                    if (other.gameObject.layer.Equals(7))
                     {
-                        if (other.gameObject.activeSelf)
+                        if (other.gameObject.CompareTag(tag))
                         {
-                            CollapseBalls(other.gameObject.GetComponent<BallView>());
-                            OpenClampingWindow();
-                            temp = _splineUser.result.forward * -1;
+                            if (other.gameObject.activeSelf)
+                            {
+                                CollapseBalls(other.gameObject.GetComponent<BallView>());
+                                OpenClampingWindow();
+                                temp = _splineUser.result.forward * -1;
+                            }
                         }
                     }
                 }
-            }else if (gameObject.layer.Equals(9))
+            }
+            else if (gameObject.layer.Equals(9))
             {
                 if (other.gameObject.layer.Equals(7))
                 {
@@ -94,24 +106,29 @@ namespace Core
             }
             else if (gameObject.layer.Equals(7))
             {
-                if (other.gameObject.layer.Equals(7))
+                if (!LevelController.Current.LineState.Equals(LineState.Await))
                 {
-                    if (other.gameObject.CompareTag(tag))
+                    if (other.gameObject.layer.Equals(7))
                     {
-                        if (other.gameObject.activeSelf)
+                        if (other.gameObject.CompareTag(tag))
                         {
-                            CollapseBalls(other.gameObject.GetComponent<BallView>());
-                            OpenClampingWindow();
-                            temp = _splineUser.result.forward * -1;
+                            if (other.gameObject.activeSelf)
+                            {
+                                CollapseBalls(other.gameObject.GetComponent<BallView>());
+                                OpenClampingWindow();
+                                temp = _splineUser.result.forward * -1;
+                            }
                         }
                     }
                 }
-            }else if (gameObject.layer.Equals(9))
+            }
+            else if (gameObject.layer.Equals(9))
             {
                 if (other.gameObject.layer.Equals(7))
                 {
                     if (gameObject.activeSelf)
                     {
+                        //if(type)
                         other.gameObject.GetComponent<BallView>().CollapseBalls(this);
                     }
                 }
@@ -122,9 +139,61 @@ namespace Core
         {
             if (this.gameObject.activeSelf)
             {
+                LevelController.Current.BallCollapsed(view, this,_ballPower + 1);
                 ChangeBallPower(_ballPower + 1);
-                LevelController.Current.BallCollapsed(view, _ballPower + 1);
                 _mm.PlayFeedbacks();
+                
+            }
+        }
+
+        public void OnCollapseRemoveRiderEncounter()
+        {
+            if (_riders.Count > 0)
+            {
+                _riders.Dequeue().KillEnemy();
+                UpdateRidersSize();
+            }
+        }
+
+        public void TransferRidersOnCollapse(BallView transferView)
+        {
+            if (_riders.Count > 0)
+            {
+                var count = _riders.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    transferView.AddRiderEncounter(_riders.Dequeue());
+                }
+            }
+
+            if (_riders.Count > 0)
+            {
+                Debug.LogWarning("What?");
+            }
+        }
+
+        public void AddRiderEncounter(RiderView rider)
+        {
+            if (!_riders.Contains(rider))
+            {
+                _riders.Enqueue(rider);
+                rider.SetController(LevelController.Current);
+                UpdateRidersSize();
+            }
+        }
+
+        public void UpdateRidersSize()
+        {
+            var count = _riders.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var tempRider = _riders.Dequeue();
+                tempRider.PositionRelativeBall =
+                    Vector3.up*0.66f + Vector3.right * 0.2f * Mathf.Sin((i * 360 / count) * Mathf.Deg2Rad)
+                               + Vector3.forward * 0.2f * Mathf.Cos((i * 360 / count) * Mathf.Deg2Rad);
+                tempRider.Ball = this.transform;
+                tempRider.transform.localScale = Vector3.one * (0.5f+ 0.5f/count);
+                _riders.Enqueue(tempRider);
             }
         }
 
@@ -168,7 +237,7 @@ namespace Core
 
         public void Execute(float clampValue)
         {
-            transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.8f);
+            transform.position = Vector3.Lerp(transform.position, _splineUser.result.position, 0.6f);
             //var magnitude = _rigidbody.velocity.magnitude;
             //_rigidbody.velocity = _splineUser.result.forward * magnitude*0.95f;
             if (_clampingVelocityWindow == 0)
@@ -191,8 +260,8 @@ namespace Core
         {
             _clampingVelocityWindow = _clampingWindowDuration;
         }
-        
-        
+
+
         public void ChangeBallPower(int power)
         {
             /*
@@ -215,7 +284,8 @@ namespace Core
                 _renderer.materials = _tempMaterials;
                 _meshFilter.mesh = _numberMeshes[power];
                 gameObject.tag = power.ToString();
-            }else if (power.Equals(-1))
+            }
+            else if (power.Equals(-1))
             {
                 _tempMaterials = _renderer.materials;
                 _tempMaterials[0] = _rainbowMaterial;
@@ -224,13 +294,16 @@ namespace Core
                 gameObject.layer = 9;
                 _meshFilter.mesh = _rainbowMesh;
             }
+
             _ballPower = power;
+            OnCollapseRemoveRiderEncounter();
         }
 
         private void Awake()
         {
             gameObject.SetActive(false);
             _rigidbody = GetComponent<Rigidbody>();
+            
         }
 
         public void SetSpline(SplineComputer spline)

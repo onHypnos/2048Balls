@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1913511914326384146, guid: 2e6d7246fc353d84bbb03e344d69ffce, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 1050615
+      objectReference: {fileID: 0}
     - target: {fileID: 4647993788523799874, guid: 2e6d7246fc353d84bbb03e344d69ffce, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -698,7 +702,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.5383558, y: -0.000000026140457, z: 0.000000016699385, w: 0.84271765}
+  m_LocalRotation: {x: 0.5383558, y: 0.000000026140462, z: -0.000000016699387, w: 0.84271765}
   m_LocalPosition: {x: 0, y: 17.42, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -802,6 +806,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5539647243859779824, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
+      propertyPath: Feedbacks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
       propertyPath: m_Name
       value: Ball
@@ -814,7 +822,8 @@ PrefabInstance:
       propertyPath: lastPosition.y
       value: 14.7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
 --- !u!1001 &1444786949
 PrefabInstance:
@@ -883,6 +892,10 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5754084199372789682, guid: f20e22101615e4b498526a2f20d9959d, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 3680687292192122401, guid: 909b59c5a221a594f8c8462a1b1ad16c, type: 3}
     - target: {fileID: 919132149155446097, guid: f20e22101615e4b498526a2f20d9959d, type: 3}
       propertyPath: m_Name
       value: Mountains_mesh
@@ -952,7 +965,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589259107}
-  m_LocalRotation: {x: 0.5383558, y: -0.000000026140457, z: 0.000000016699385, w: 0.84271765}
+  m_LocalRotation: {x: 0.5383558, y: 0.000000026140462, z: -0.000000016699387, w: 0.84271765}
   m_LocalPosition: {x: -0, y: 17.42, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1244,11 +1257,15 @@ MonoBehaviour:
   _envieromentList:
   - {fileID: 2100000, guid: e4f6bbd7854d4fc4e8c990a55ef9648a, type: 2}
   - {fileID: 2100000, guid: c80280c877c16214fb5e7bfbab7589bb, type: 2}
+  _rockMaterial: {fileID: 2100000, guid: 998e92505107c3345a430d6edb582756, type: 2}
   _needMovingRoad: 1
   _roadMaterial: {fileID: 2100000, guid: b262c2e0b0f86ca47b1051fb4b8bdb49, type: 2}
   _arrowMaterials:
   - {fileID: 2100000, guid: b262c2e0b0f86ca47b1051fb4b8bdb49, type: 2}
   - {fileID: 2100000, guid: dbab4d327de6ed04a89e49a5adf91255, type: 2}
+  _gradientValue: 0
+  _gradientMinBound: -8
+  _gradientMaxBound: -5
 --- !u!4 &2031343083
 Transform:
   m_ObjectHideFlags: 0
@@ -1275,6 +1292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e276a3745da64e09b4216771c2ed34b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _particleExamples: []
 --- !u!114 &2031343086
 MonoBehaviour:
   m_ObjectHideFlags: 0
