@@ -107,7 +107,7 @@ namespace Core
             {
                 Debug.LogWarning("Warrior prefab is not set, failed in LevelController", this.gameObject);
             }
-
+            _mm.Initialization();
             _splineRoad.material = DesignController.Current.GetRoadMaterial();
             GameEvents.Current.LevelLoaded();
         }

@@ -86,8 +86,8 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GradientAngle: 0
-    - _GradientCenterX: 0
-    - _GradientCenterY: 0
+    - _GradientCenterX: 0.69
+    - _GradientCenterY: 2.29
     - _GradientEnabled: 1
     - _GradientSize: 10
     - _LightContribution: 0

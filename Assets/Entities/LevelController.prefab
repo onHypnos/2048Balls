@@ -51,6 +51,7 @@ MonoBehaviour:
   _activeWarriors: []
   _riders: []
   _lineState: 0
+  _playerCastle: {fileID: 0}
   _currentPlayer: {fileID: 0}
   _ballExample: {fileID: 7891971235402653535, guid: 27de5fdf5ae995e4084c5953661a1b1a, type: 3}
   _playerPrefab: {fileID: 7208961100566729712, guid: 84c931f6d1ca47d4491a74b8dc5c9a1a, type: 3}
@@ -63,7 +64,7 @@ MonoBehaviour:
   _baseRegroupWindowDuration: 0.15
   _deployTime: 0.5
   _deployWindow: 1.5
-  _pushPowerModifier: 1.55
+  _pushPowerModifier: 1.65
   _scoreCurrent: 0
   _scoreMax: 300
   _splineRoad: {fileID: 0}
